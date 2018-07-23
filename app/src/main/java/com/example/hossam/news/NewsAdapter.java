@@ -44,16 +44,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         return mItems.size();
     }
 
-    public void updateDataSet(ArrayList<Item> items) {
-        mItems.clear();
-        if (items != null && !items.isEmpty()) {
+    public void updateAdapter(ArrayList<Item> items) {
+        clearAdapter();
+        if (items != null & !items.isEmpty()) {
             mItems.addAll(items);
             notifyDataSetChanged();
         }
     }
 
-    public void clearDataSet() {
+    public void clearAdapter() {
         mItems.clear();
+        notifyDataSetChanged();
     }
 
     public interface OnItemClickListener {
