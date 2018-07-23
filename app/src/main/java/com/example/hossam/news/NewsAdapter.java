@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
@@ -35,8 +38,24 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         Item item = mItems.get(position);
         holder.getSectionTextView().setText(item.getSection());
         holder.getTitleTextView().setText(item.getTitle());
-        holder.getDateTextView().setText(item.getDate());
+        holder.getDateTextView().setText(formatDate(item.getDate()));
         holder.onListClick(item, mListener);
+    }
+
+    private String formatDate(String defaultDate) {
+        defaultDate = defaultDate.substring(0, defaultDate.length() - 1);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy");
+
+        Date date;
+        String output = "";
+        try {
+            date = inputFormat.parse(defaultDate);
+            output = outputFormat.format(date);
+        } catch (ParseException e) {
+            Log.e(TAG, "Error parsing date.", e);
+        }
+        return output;
     }
 
     @Override
