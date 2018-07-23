@@ -83,11 +83,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<ArrayList<Item>> loader, ArrayList<Item> items) {
         mAdapter.clearAdapter();
-        mEmptyTextView.setText(R.string.no_news);
+        mProgressBar.setVisibility(View.GONE);
         if (items != null && !items.isEmpty()) {
             mAdapter.updateAdapter(items);
         } else {
-            mProgressBar.setVisibility(View.GONE);
+            mEmptyTextView.setText(R.string.no_news);
         }
     }
 
