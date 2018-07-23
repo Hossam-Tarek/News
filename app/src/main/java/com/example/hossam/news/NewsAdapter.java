@@ -14,9 +14,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private String TAG = "NewsAdapter";
     private ArrayList<Item> mItems;
+    private OnItemClickListener mListener;
 
-    public NewsAdapter(ArrayList<Item> items) {
+    public NewsAdapter(ArrayList<Item> items, OnItemClickListener listener) {
         mItems = items;
+        mListener = listener;
     }
 
     @NonNull
@@ -34,6 +36,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.getSectionTextView().setText(item.getSection());
         holder.getTitleTextView().setText(item.getTitle());
         holder.getDateTextView().setText(item.getDate());
+        holder.onListClick(item, mListener);
     }
 
     @Override
@@ -53,6 +56,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         mItems.clear();
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(Item item);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mSectionTextView;
         private TextView mTitleTextView;
@@ -63,11 +70,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mSectionTextView = itemView.findViewById(R.id.section);
             mTitleTextView = itemView.findViewById(R.id.title);
             mDateTextView = itemView.findViewById(R.id.date);
+        }
 
+        public void onListClick(final Item item, final OnItemClickListener listener) {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Log.d(TAG, "item " + getAdapterPosition() + " clicked");
+                    listener.onItemClick(item);
                 }
             });
         }

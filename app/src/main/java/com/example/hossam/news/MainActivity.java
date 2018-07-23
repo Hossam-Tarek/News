@@ -1,7 +1,9 @@
 package com.example.hossam.news;
 
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +33,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new NewsAdapter(mItems);
+        mAdapter = new NewsAdapter(mItems, new NewsAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Item item) {
+                Uri url = Uri.parse(item.getUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, url);
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
+        });
         recyclerView.setAdapter(mAdapter);
 
         getLoaderManager().initLoader(LOADER_ID, null, this);
