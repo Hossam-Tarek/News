@@ -1,6 +1,7 @@
 package com.example.hossam.news;
 
 import android.text.TextUtils;
+import android.util.JsonToken;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -104,7 +105,8 @@ public final class QueryUtils {
         ArrayList<Item> items = new ArrayList<>();
         try {
             JSONObject rootObject = new JSONObject(jsonResponse);
-            JSONArray resultsArray = new JSONArray("results");
+            JSONObject response = rootObject.getJSONObject("response");
+            JSONArray resultsArray = response.getJSONArray("results");
 
             JSONObject jsonObject;
             for (int i = 0; i < resultsArray.length(); i++) {
