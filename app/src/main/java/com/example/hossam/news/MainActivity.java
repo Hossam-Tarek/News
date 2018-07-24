@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Item>> {
     private static final String REQUEST_URL =
-            "https://content.guardianapis.com/search?api-key=cb41f6c2-b6a9-410b-a262-3edbf5fc82ed";
+            "https://content.guardianapis.com/search?show-tags=contributor&api-key=cb41f6c2-b6a9-410b-a262-3edbf5fc82ed";
 
     private NewsAdapter mAdapter;
     private static final String TAG = "MainActivity";

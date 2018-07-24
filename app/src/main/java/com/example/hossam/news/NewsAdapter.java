@@ -39,6 +39,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.getSectionTextView().setText(item.getSection());
         holder.getTitleTextView().setText(item.getTitle());
         holder.getDateTextView().setText(formatDate(item.getDate()));
+        holder.getAuthorNameTextView().setText(item.getAuthorName());
         holder.onListClick(item, mListener);
     }
 
@@ -84,12 +85,14 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         private TextView mSectionTextView;
         private TextView mTitleTextView;
         private TextView mDateTextView;
+        private TextView mAuthorNameTextView;
 
         public ViewHolder(View itemView) {
             super(itemView);
             mSectionTextView = itemView.findViewById(R.id.section);
             mTitleTextView = itemView.findViewById(R.id.title);
             mDateTextView = itemView.findViewById(R.id.date);
+            mAuthorNameTextView = itemView.findViewById(R.id.author_name);
         }
 
         public void onListClick(final Item item, final OnItemClickListener listener) {
@@ -111,6 +114,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         public TextView getDateTextView() {
             return mDateTextView;
+        }
+
+        public TextView getAuthorNameTextView() {
+            return mAuthorNameTextView;
         }
     }
 }

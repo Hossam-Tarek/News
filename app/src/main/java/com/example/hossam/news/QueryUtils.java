@@ -111,14 +111,24 @@ public final class QueryUtils {
             JSONArray resultsArray = response.getJSONArray("results");
 
             JSONObject jsonObject;
+            String authorName;
             for (int i = 0; i < resultsArray.length(); i++) {
                 jsonObject = resultsArray.getJSONObject(i);
 
+                try {
+                    authorName = jsonObject
+                            .getJSONArray("tags")
+                            .getJSONObject(0)
+                            .getString("webTitle");
+                } catch (JSONException e) {
+                    authorName = "";
+                }
                 items.add(new Item(
                         jsonObject.getString("sectionName"),
                         jsonObject.getString("webTitle"),
                         jsonObject.getString("webPublicationDate"),
-                        jsonObject.getString("webUrl")));
+                        jsonObject.getString("webUrl"),
+                        authorName));
             }
         } catch (JSONException e) {
             Log.e(TAG, "Error parsing JSON response.", e);

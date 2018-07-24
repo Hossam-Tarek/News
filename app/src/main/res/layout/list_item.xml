@@ -20,7 +20,7 @@
             android:textSize="20sp"
             android:layout_marginBottom="8dp"
             android:textColor="@android:color/black"
-            tools:text="US news"/>
+            tools:text="Sport"/>
 
         <TextView
             android:id="@+id/title"
@@ -30,13 +30,30 @@
             android:layout_marginBottom="8dp"
             android:ellipsize="end"
             android:maxLines="1"
-            tools:text="Trump claims Cohen tape may be illegal and insists he did nothing wrong"/>
+            tools:text="County cricket: Yorkshire beat Lancahsire, Notts v Surrey and more – live!"/>
 
-        <TextView
-            android:id="@+id/date"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            tools:text="2018-07-21"/>
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                tools:text="Graham Hardcastle"/>
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="16sp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                tools:text="24-7-2018"/>
+        </RelativeLayout>
     </LinearLayout>
 </android.support.v7.widget.CardView>
