@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public final class QueryUtils {
     private static final String TAG = "QueryUtils";
+    private static final int READ_TIMEOUT = 10_000;
+    private static final int CONNECTION_TIMEOUT = 15_000;
 
     private QueryUtils() {}
 
@@ -73,8 +75,8 @@ public final class QueryUtils {
         try {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setRequestMethod("GET");
-            httpURLConnection.setReadTimeout(10_000);
-            httpURLConnection.setConnectTimeout(15_000);
+            httpURLConnection.setReadTimeout(READ_TIMEOUT);
+            httpURLConnection.setConnectTimeout(CONNECTION_TIMEOUT);
             httpURLConnection.connect();
 
             int responseCode = httpURLConnection.getResponseCode();
