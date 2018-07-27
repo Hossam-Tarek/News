@@ -4,9 +4,11 @@ import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,8 +25,9 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Item>> {
     private static final String REQUEST_URL =
-            "https://content.guardianapis.com/search?show-tags=contributor&api-key=cb41f6c2-b6a9-410b-a262-3edbf5fc82ed";
+            "https://content.guardianapis.com/search";
 
+    private static final String API_KEY = "cb41f6c2-b6a9-410b-a262-3edbf5fc82ed";
     private NewsAdapter mAdapter;
     private static final String TAG = "MainActivity";
     private static final int LOADER_ID = 0;
@@ -80,7 +83,26 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<ArrayList<Item>> onCreateLoader(int i, Bundle bundle) {
-        return new NewsLoader(this, REQUEST_URL);
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this);
+
+        String pageSize = sharedPreferences.getString(
+                getString(R.string.page_size_key),
+                getString(R.string.page_size_default));
+
+        String orderBy = sharedPreferences.getString(
+                getString(R.string.order_by_key),
+                getString(R.string.order_by_default));
+
+        Uri baseUri = Uri.parse(REQUEST_URL);
+        Uri.Builder uriBuilder = baseUri.buildUpon();
+
+        uriBuilder.appendQueryParameter("api-key", API_KEY);
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        uriBuilder.appendQueryParameter("page-size", pageSize);
+        uriBuilder.appendQueryParameter("order-by", orderBy);
+
+        return new NewsLoader(this, uriBuilder.toString());
     }
 
     @Override
