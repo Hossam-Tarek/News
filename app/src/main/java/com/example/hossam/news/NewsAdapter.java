@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -17,9 +19,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
     private String TAG = "NewsAdapter";
     private ArrayList<Item> mItems;
-    private OnItemClickListener mListener;
+    private ListItemClickListener mListener;
 
-    public NewsAdapter(ArrayList<Item> items, OnItemClickListener listener) {
+    public NewsAdapter(ArrayList<Item> items, ListItemClickListener listener) {
         mItems = items;
         mListener = listener;
     }
@@ -40,7 +42,10 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         holder.getTitleTextView().setText(item.getTitle());
         holder.getDateTextView().setText(formatDate(item.getDate()));
         holder.getAuthorNameTextView().setText(item.getAuthorName());
-        holder.onListClick(item, mListener);
+    }
+
+    public Item getItem(int position) {
+        return mItems.get(position);
     }
 
     private String formatDate(String defaultDate) {
@@ -77,11 +82,11 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    public interface OnItemClickListener {
-        void onItemClick(Item item);
+    public interface ListItemClickListener {
+        void onListItemClicked(NewsAdapter adapter, View view, int position);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mSectionTextView;
         private TextView mTitleTextView;
         private TextView mDateTextView;
@@ -93,15 +98,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
             mTitleTextView = itemView.findViewById(R.id.title);
             mDateTextView = itemView.findViewById(R.id.date);
             mAuthorNameTextView = itemView.findViewById(R.id.author_name);
-        }
-
-        public void onListClick(final Item item, final OnItemClickListener listener) {
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.onItemClick(item);
-                }
-            });
+            itemView.setOnClickListener(this);
         }
 
         public TextView getSectionTextView() {
@@ -118,6 +115,12 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
 
         public TextView getAuthorNameTextView() {
             return mAuthorNameTextView;
+        }
+
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition();
+            mListener.onListItemClicked(NewsAdapter.this, itemView, position);
         }
     }
 }

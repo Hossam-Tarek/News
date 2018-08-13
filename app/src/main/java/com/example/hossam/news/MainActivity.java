@@ -13,11 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -46,9 +45,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        mAdapter = new NewsAdapter(items, new NewsAdapter.OnItemClickListener() {
+        mAdapter = new NewsAdapter(items, new NewsAdapter.ListItemClickListener() {
             @Override
-            public void onItemClick(Item item) {
+            public void onListItemClicked(NewsAdapter adapter, View view, int position) {
+                Item item = adapter.getItem(position);
                 Uri url = Uri.parse(item.getUrl());
                 Intent intent = new Intent(Intent.ACTION_VIEW, url);
 
