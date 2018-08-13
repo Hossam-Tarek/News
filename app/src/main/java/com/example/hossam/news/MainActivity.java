@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,8 +22,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.prefs.PreferenceChangeListener;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Item>> {
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<ArrayList<Item>>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
     private static final String REQUEST_URL =
             "https://content.guardianapis.com/search";
 
@@ -32,6 +37,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final int LOADER_ID = 0;
     private TextView mEmptyTextView;
     private ProgressBar mProgressBar;
+    private LoaderManager mLoaderManager;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +70,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         mProgressBar = findViewById(R.id.loading_spinner);
 
         if (isInternetWorking()) {
-            getLoaderManager().initLoader(LOADER_ID, null, this);
+            mLoaderManager = getLoaderManager();
+            mLoaderManager.initLoader(LOADER_ID, null, this);
         } else {
             mProgressBar.setVisibility(View.GONE);
             mEmptyTextView.setText(R.string.no_internet);
@@ -83,14 +91,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public Loader<ArrayList<Item>> onCreateLoader(int i, Bundle bundle) {
-        SharedPreferences sharedPreferences =
+        mSharedPreferences =
                 PreferenceManager.getDefaultSharedPreferences(this);
+        mSharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        String pageSize = sharedPreferences.getString(
+        String pageSize = mSharedPreferences.getString(
                 getString(R.string.page_size_key),
                 getString(R.string.page_size_default));
 
-        String orderBy = sharedPreferences.getString(
+        String orderBy = mSharedPreferences.getString(
                 getString(R.string.order_by_key),
                 getString(R.string.order_by_default));
 
@@ -135,5 +144,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
+        mLoaderManager.restartLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mSharedPreferences.unregisterOnSharedPreferenceChangeListener(this);
     }
 }
